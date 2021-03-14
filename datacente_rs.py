@@ -35,13 +35,13 @@ def get_data(list_for_search):
     }
     for item in list_for_search:
         key = "b2e2be86-4f00-4337-bc3f-d61f168ef7d2"
-        url = "https://www.datacente.rs/api/dc/{item}?key={key}"
+        url = f"https://www.datacente.rs/api/dc/{item}?key={key}"
         r = session.get(url, headers=headers)
         if r.status_code == 200:
             print(url)
             data = r.json()
-
-            doc = data['doc']
+            
+            doc = data['dc']
             city = data['city']
             address = data['address'][0]
             company = data['company']
