@@ -56,11 +56,11 @@ def get_data(list_for_search):
                 'longitude': doc.get('Longitude'),
                 'latitude': doc.get('Latitude'),	
                 'country': doc.get('country'),	
-                'state': None,	
+                'state': '-',	
                 'city': city.get('name'),	
                 'zip': doc.get('PostalCode'),	
                 'websiteUrl': company.get('website'),	
-                'yearFounded': None,	
+                'yearFounded': "-",	
                 'supportPhone': company.get('tel'), 
                 'supportEmail': company.get('email'),	
                 'displayPhoneNumber': company.get('tel'), 	
@@ -88,6 +88,7 @@ if __name__ == "__main__":
     df_locations = pd.DataFrame(data)
     serie_locations = list(df_locations['id'])
     
-    df_scraping = pd.DataFrame(get_data(serie_locations[:10]))
+    df_scraping = pd.DataFrame(get_data(serie_locations))
     df_to_excel = df_scraping.replace(np.nan, '-', regex=True)
+    df_to_excel = df_to_excel.replace('', '-', regex=True)
     df_to_excel.to_excel(f'datacente_rs.xlsx')

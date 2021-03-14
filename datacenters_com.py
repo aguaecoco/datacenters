@@ -77,4 +77,5 @@ if __name__ == "__main__":
     df_full = pd.merge(df_one_full, df_providers)
 
     df_to_excel = df_full.replace(np.nan, '-', regex=True)
+    df_to_excel = df_to_excel.replace('N/A', '-', regex=True)
     df_to_excel.to_excel(f'datacenters_com.xlsx')
