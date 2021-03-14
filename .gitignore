@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+cloundscense_pre.xlsx
+
 # Distribution / packaging
 .Python
 build/

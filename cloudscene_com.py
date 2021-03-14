@@ -4,6 +4,10 @@ import pandas as pd
 import numpy as np
 from bs4 import BeautifulSoup as bs
 
+"""
+    Incompleto Revisar Mejor
+"""
+
 
 def get_start_data():
     headers = {
@@ -17,20 +21,20 @@ def get_start_data():
     x_algolia_api_key = "4ab01079145dab5d03fb5c4a0455f564"
     url = f'https://ei7s1glgkn-dsn.algolia.net/1/indexes/*/queries?x-algolia-agent={x_algolia_agent}&x-algolia-application-id={x_algolia_application_id}&x-algolia-api-key={x_algolia_api_key}'
     i = 0
+    per_page = 8000
     while True:
-        per_page = 100
-        page = i
         json = {
             "requests":[
                 {
                     "indexName":"facilities-production",
-                    "params":"hitsPerPage={}&maxValuesPerFacet=3&page={}&facets=%5B%5D&tagFilters=".format(per_page, page)
+                    "params":"hitsPerPage={}&maxValuesPerFacet=3&page={}&facets=%5B%5D&tagFilters=".format(per_page, i)
                 }
             ]
         }
         r = session.post(url, headers=headers, json=json)
         if r.status_code == 200:
             data = r.json()
+            print(len(data['results'][0]['hits']), i)
             if len(data['results'][0]['hits']) > 0:
                 for item in data['results'][0]['hits']:
                     adress = item['address']
@@ -57,25 +61,9 @@ def get_start_data():
                     result.append(payload)
             else:
                 break
-
         i+=1
 
-    for item in result:
-        assetUUID = get_asset_uid(item['url'])
-        if assetUUID:
-            data = get_data(f"https://cloudscene.com/data-center/getData?assetId={assetUUID}&searchSP=&searchFab=&sortBySP=0&sortByFab=0&currentPageSP=1&currentPageFab=1")
-            if data:
-                facility = data['facility']
-                item['providerId'] = facility.get('company_id')
-                item["grossBuildingSize"] = facility.get('buildSizeGross')
-                item["grossColocationSpace"] = facility.get('buildSizeColocationTot')
-                item["totalPowerMw"] = facility.get('powerGenTotal')
-                item["powerDensity"] = facility.get('powerGenRackMax')
-                item["displayPhoneNumber"] = facility.get('salesPhone')
-
-                result_final.append(item)
-    
-    return result_final
+    return result
 
 
 def get_data(url):
@@ -125,6 +113,24 @@ def get_asset_uid(url):
 if __name__ == "__main__":
     session = requests.session()
     data = get_start_data()
-    df_providers = pd.DataFrame(data)
-    df_to_excel = df_full.replace(np.nan, '-', regex=True)
-    df_to_excel.to_excel(f'cloudsence_com.xlsx')
+
+    df_pre_scraping = pd.DataFrame(data)
+    df_to_excel = df_pre_scraping.replace(np.nan, '-', regex=True)
+    df_to_excel.to_excel(f'pre_scraping_cloundscense.xlsx')
+
+    # for item in result:
+    #     assetUUID = get_asset_uid(item['url'])
+    #     if assetUUID:
+    #         data = get_data(f"https://cloudscene.com/data-center/getData?assetId={assetUUID}&searchSP=&searchFab=&sortBySP=0&sortByFab=0&currentPageSP=1&currentPageFab=1")
+    #         if data:
+    #             facility = data['facility']
+    #             item['providerId'] = facility.get('company_id')
+    #             item["grossBuildingSize"] = facility.get('buildSizeGross')
+    #             item["grossColocationSpace"] = facility.get('buildSizeColocationTot')
+    #             item["totalPowerMw"] = facility.get('powerGenTotal')
+    #             item["powerDensity"] = facility.get('powerGenRackMax')
+    #             item["displayPhoneNumber"] = facility.get('salesPhone')
+
+    #             result_final.append(item)
+    
+    # return result_final

@@ -6,8 +6,11 @@ from bs4 import BeautifulSoup as bs
 
 
 def get_start_data():
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'
+    }
     url = 'https://www.datacenters.com/api/v1/locations?query=&withProducts=false&showHidden=false&nearby=false&radius=0&bounds=&circleBounds=&polygonPath=&forMap=true'
-    r = session.get(url)
+    r = session.get(url. headers=headers)
     if r.status_code == 200:
         data = r.json()
 
@@ -16,8 +19,13 @@ def get_start_data():
 
 def get_data(list_for_search):
     list_result = []
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'
+    }
+    
     for item in list_for_search:
-        r = session.get(item['url'])
+        r = session.get(item['url'], headers=headers)
         if r.status_code == 200:
             print(item['url'])
             html = r.content
@@ -52,7 +60,6 @@ if __name__ == "__main__":
 
     df_locations = pd.DataFrame(data['locations'])
     df_locations = df_locations[['id', 'name', 'fullAddress', 'url', 'providerId', 'providerName', 'longitude', 'latitude']]
-    # df_locations = df_locations.loc[(df_locations['fullAddress'].str.contains(', USA'))]
     df_locations['url'] = df_locations.apply(lambda x: f'https://www.datacenters.com{x["url"]}', axis=1)
 
     list_for_search = []
