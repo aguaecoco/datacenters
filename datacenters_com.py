@@ -10,7 +10,7 @@ def get_start_data():
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'
     }
     url = 'https://www.datacenters.com/api/v1/locations?query=&withProducts=false&showHidden=false&nearby=false&radius=0&bounds=&circleBounds=&polygonPath=&forMap=true'
-    r = session.get(url. headers=headers)
+    r = session.get(url, headers=headers)
     if r.status_code == 200:
         data = r.json()
 
