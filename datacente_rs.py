@@ -40,7 +40,7 @@ def get_data(list_for_search):
         if r.status_code == 200:
             print(url)
             data = r.json()
-            
+
             doc = data['dc']
             city = data['city']
             address = data['address'][0]
@@ -48,7 +48,7 @@ def get_data(list_for_search):
 
             payload = {
                 'id': item,	
-                'name': doc('Name'),	
+                'name': doc.get('Name'),	
                 'fullAddress': address,	
                 'url': f"https://www.datacente.rs/datacenter/{item}/profile",	
                 'providerId': company.get('id'),	
