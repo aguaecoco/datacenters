@@ -78,7 +78,7 @@ def get_data(list_for_search):
             }
             list_result.append(payload)
     
-    return list_resulta
+    return list_result
 
 
 if __name__ == "__main__":
